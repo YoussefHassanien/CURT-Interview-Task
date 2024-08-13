@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Inventory Management</title>
+    <link rel="stylesheet" href="../static/CSS/styles.css">
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-left">
+            <img src="../Images/stock-keeping-unit.png" alt="Logo" class="logo">
+            <span>Inventory Management - Admin</span>
+        </div>
+        <div class="nav-right">
+            <a href="..templates/login.html">Logout</a>
+        </div>
+    </div>
+    <div class="inventory-container">
+        <h2>Manage Inventory Items</h2>
+        <div class="search-container">
+            <input type="text" id="searchBar" placeholder="Search for items..">
+            <button onclick="searchTable()" class="search-button">
+                <img src="../Images/glass.png" alt="Search">
+            </button>
+       </div>
+        <table class="inventory-table" id="inventoryTable">
+            <thead>
+                <tr>
+                    <th>Item ID</th>
+                    <th>Item Type</th>
+                    <th>Describtion</th>
+                    <th>Quantity</th>
+                    <th>Addition Date</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Type 1</td>
+                    <td>Describtion 1</td>
+                    <td>100</td>
+                    <td>2020-01-01</td>
+                    <td>$10.00</td>
+                    <td>
+                        <button onclick="editItem(this)" class="edit-button">Edit</button>
+                        <button onclick="deleteItem(this)" class="delete-button">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Type 2</td>
+                    <td>Describtion 2</td>
+                    <td>200</td>
+                    <td>2020-02-02</td>
+                    <td>$20.00</td>
+                    <td>
+                        <button onclick="editItem(this)" class="edit-button">Edit</button>
+                        <button onclick="deleteItem(this)" class="delete-button">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button onclick="addItem()" class="add-button">Add Item</button>
+    </div>
+    <script src="../static/Scripts/script.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    padding-top: 80px; /* Adjust based on the height of the nav-bar */
+    padding-top: 80px;
     font-family: Arial, sans-serif;
 }
 
@@ -25,8 +25,8 @@ body {
 }
 
 .nav-left .logo {
-    height: 80px; /* Adjust the height as needed */
-    margin-right: 10px; /* Space between logo and text */
+    height: 80px;
+    margin-right: 10px; 
     background-color: white;
     position: absolute;
     left: 0;
@@ -57,9 +57,9 @@ body {
     color: black;
 }
 
-.login-container, .register-container, .inventory-container {
+.login-container, .register-container {
     max-width: 800px;
-    margin: 100px auto; /* Adjust based on the height of the nav-bar */
+    margin: 100px auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -169,3 +169,42 @@ button:hover {
 .search-button:hover {
     background-color: #555;
 }
+
+.edit-button, .delete-button, .save-button, .cancel-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: block; 
+    margin-bottom: 5px;
+}
+
+.add-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.edit-button:hover, .delete-button:hover, .add-button:hover, .save-button:hover, .cancel-button:hover {
+    opacity: 0.8;
+}
+
+.inventory-container {
+    transition: height 0.3s ease;
+    max-width: 1300px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* .inventory-container.expanded {
+    height: 500px; 
+} */
