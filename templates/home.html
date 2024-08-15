@@ -16,15 +16,15 @@
             <a href="../templates/login.html">Logout</a>
         </div>
     </div>
-    <div class="inventory-container">
+    <div class="inventory-container-item">
         <h2>Inventory Items</h2>
-        <div class="search-container">
-            <input type="text" id="searchBar" placeholder="Search for items..">
+        <div class="search-container-item">
+            <input type="text" id="searchBarItem" placeholder="Search for items..">
             <button onclick="searchTable()" class="search-button">
                 <img src="../Images/glass.png" alt="Search">
             </button>
         </div>
-        <table class="inventory-table" id="inventoryTable">
+        <table class="inventory-table-items" id="inventoryTableItems">
             <thead>
                 <tr>
                     <th>Item ID</th>
@@ -42,7 +42,7 @@
                     <td>Describtion 1</td>
                     <td>100</td>
                     <td>2020-01-01</td>
-                    <td>$10.00</td>
+                    <td>10.00 $</td>
                 </tr>
                 <tr>
                     <td>2</td>
@@ -50,7 +50,7 @@
                     <td>Describtion 2</td>
                     <td>200</td>
                     <td>2020-02-02</td>
-                    <td>$20.00</td>
+                    <td>20.00 $</td>
                 </tr>
             </tbody>
         </table>

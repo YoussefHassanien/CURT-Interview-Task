@@ -57,8 +57,8 @@ body {
     color: black;
 }
 
-.login-container, .register-container {
-    max-width: 800px;
+.login-container, .register-container, .add-item-container, .edit-item-container, .delete-item-container {
+    max-width: 1200px;
     margin: 100px auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -95,11 +95,6 @@ button:hover {
     background-color: #555;
 }
 
-#error-message {
-    color: red;
-    margin-top: 10px;
-}
-
 .register-prompt, .login-prompt {
     margin-top: 20px;
     text-align: center;
@@ -115,34 +110,44 @@ button:hover {
     text-decoration: underline;
 }
 
-.inventory-table {
+.inventory-container-item{
+    transition: height 0.3s ease;
+    max-width: 1200px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.inventory-table-items {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-.inventory-table th, .inventory-table td {
+.inventory-table-items th, .inventory-table-items td {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
 }
 
-.inventory-table th {
+.inventory-table-items th {
     background-color: #f2f2f2;
 }
 
-.inventory-table tr:nth-child(even) {
+.inventory-table-items tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-.search-container {
+.search-container-item {
     display: flex;
     align-items: center;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
-#searchBar {
+#searchBarItem {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -169,42 +174,3 @@ button:hover {
 .search-button:hover {
     background-color: #555;
 }
-
-.edit-button, .delete-button, .save-button, .cancel-button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    display: block; 
-    margin-bottom: 5px;
-}
-
-.add-button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 20px;
-}
-
-.edit-button:hover, .delete-button:hover, .add-button:hover, .save-button:hover, .cancel-button:hover {
-    opacity: 0.8;
-}
-
-.inventory-container {
-    transition: height 0.3s ease;
-    max-width: 1300px;
-    margin: 100px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-/* .inventory-container.expanded {
-    height: 500px; 
-} */

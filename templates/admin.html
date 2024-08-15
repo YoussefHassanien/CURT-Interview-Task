@@ -16,55 +16,115 @@
             <a href="..templates/login.html">Logout</a>
         </div>
     </div>
-    <div class="inventory-container">
+    <div class="inventory-container-item">
         <h2>Manage Inventory Items</h2>
-        <div class="search-container">
-            <input type="text" id="searchBar" placeholder="Search for items..">
-            <button onclick="searchTable()" class="search-button">
+        <div class="search-container-item">
+            <input type="text" id="searchBarItem" placeholder="Search for items..">
+            <button onclick="searchTable()" class="search-button" id="searchItem">
                 <img src="../Images/glass.png" alt="Search">
             </button>
        </div>
-        <table class="inventory-table" id="inventoryTable">
+        <table class="inventory-table-items" id="inventoryTableItems">
             <thead>
                 <tr>
                     <th>Item ID</th>
                     <th>Item Type</th>
-                    <th>Describtion</th>
+                    <th>Description</th>
                     <th>Quantity</th>
                     <th>Addition Date</th>
                     <th>Price</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>1</td>
                     <td>Type 1</td>
-                    <td>Describtion 1</td>
+                    <td>Description 1</td>
                     <td>100</td>
                     <td>2020-01-01</td>
-                    <td>$10.00</td>
-                    <td>
-                        <button onclick="editItem(this)" class="edit-button">Edit</button>
-                        <button onclick="deleteItem(this)" class="delete-button">Delete</button>
-                    </td>
+                    <td>10.00 $</td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>Type 2</td>
-                    <td>Describtion 2</td>
+                    <td>Description 2</td>
                     <td>200</td>
                     <td>2020-02-02</td>
-                    <td>$20.00</td>
-                    <td>
-                        <button onclick="editItem(this)" class="edit-button">Edit</button>
-                        <button onclick="deleteItem(this)" class="delete-button">Delete</button>
-                    </td>
+                    <td>20.00 $</td>
                 </tr>
             </tbody>
         </table>
-        <button onclick="addItem()" class="add-button">Add Item</button>
     </div>
+    <div class="add-item-container">
+        <h2>Add Item</h2>
+        <form id="addItemForm">
+            <div class="form-group">
+                <label for="">Item ID</label>
+                <input type="number" id="addItemId" name="id" required>
+            </div>
+            <div class="form-group">
+                <label for="add-item-type">Item Type</label>
+                <select name="addItemType" id="addItemType">
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="Electrical">Electrical</option>
+                    <option value="Raw Material">Raw Material</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <input type="text" id="addItemDescription" name="description" required>
+            </div>
+            <div class="form-group">
+                <label for="Quantity">Quantity</label>
+                <input type="number" id="addItemQuantity" name="quantity" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" id="price" name="price" required>
+            </div>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+        <div class="edit-item-container">
+            <h2>Edit Item</h2>
+            <form id="editItemForm">
+                <div class="form-group">
+                    <label for="">Item ID</label>
+                    <input type="number" id="editItemId" name="id" placeholder="Enter the ID of the item you want to edit" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-item-type">Item Type</label>
+                    <select name="edit-item-type" id="editItemType">
+                        <option value="Mechanical">Mechanical</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Raw Material">Raw Material</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    <input type="text" id="editItemDescription" name="description" required>
+                </div>
+                <div class="form-group">
+                    <label for="Quantity">Quantity</label>
+                    <input type="number" id="editItemQuantity" name="quantity" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" id="editItemPrice" name="price" required>
+                </div>
+                <button type="submit">Edit</button>
+            </form>
+        </div>    
+        <div class="delete-item-container">
+            <h2>Delete Item</h2>
+            <form id="deleteItemForm">
+                <div class="form-group">
+                    <label for="">Item ID</label>
+                    <input type="number" id="deleteItemId" name="id" placeholder="Enter the ID of the item you want to delete" required>
+                </div>
+                <button type="submit">Delete</button>
+            </form>
+        </div>
     <script src="../static/Scripts/script.js"></script>
 </body>
 </html>
