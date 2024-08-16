@@ -14,7 +14,9 @@
         </div>
         <div class="nav-center">
             <img src="../static/Images/waving.png" alt="Hi" class="logo">
+            {% if user %}
             <span>Hi {{ user['fname'] + " " + user['lname'] }}</span>
+            {% endif %}
         </div>
         <div class="nav-right">
             <a href="{{ url_for('logout') }}">Logout</a>
@@ -41,21 +43,18 @@
                     <th>Price</th>
                 </tr>
             </thead>
+            {% if items %}
             <tbody>
-                {% for item in items %}
+                {% for row in items %}
                 <tr>
-                    <td>{{ item[0] }}</td>
-                    <td>{{ item[1] }}</td>
-                    <td>{{ item[2] }}</td>
-                    <td>{{ item[3] }}</td>
-                    <td>{{ item[4] }}</td>
-                    <td>{{ item[5] }}</td>
-                    <td>{{ item[6] }}</td>
-                    <td>{{ item[7]|string + " $" }}</td>
+                    {% for i in range(0, row|length - 2) %}
+                    <td>{{ row[i] }}</td>
+                    {% endfor %}
+                    <td>{{ row[7]|string + " $" }}</td>
                 </tr>
                 {% endfor %}
-
             </tbody>
+            {% endif %}
         </table>
     </div>
     <script src="../static/Scripts/script.js"></script>

@@ -72,6 +72,15 @@ body {
 #error-message {
     color: red;
     margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#success-message {
+    color: green;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .login-container, .register-container, .add-item-container, .edit-item-container, .delete-item-container {

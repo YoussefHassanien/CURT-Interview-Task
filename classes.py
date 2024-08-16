@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 class User:
-    def __init__(self, id, first_name, last_name, email, phone, address, birthdate, gender, ssn, admin_role=False, password="1234", my_items=[]):
+    def __init__(self, id, first_name, last_name, email, phone, address, birthdate, gender, ssn, admin_role=False, password="1234"):
         self.id = id
         self.first_name = first_name
         self.last_name = last_name
@@ -13,20 +13,10 @@ class User:
         self.ssn = ssn
         self.admin_role = admin_role
         self.password = password
-        self.my_items = my_items
-
-    def update_details(self, **kwargs):
-        for key, value in kwargs.items():
-            if hasattr(self, key):
-                if key == "admin_role":
-                    continue
-                setattr(self, key, value)
-        return self
     
 class Admin(User):
-    def __init__(self, id, first_name, last_name, email, phone, address, birthdate, gender, ssn, admin_role=True, password="1234", items_list=[]):
-        super().__init__(id, first_name, last_name, email, phone, address, birthdate, gender, ssn, admin_role, password, items_list)
-        self.items_list = items_list
+    def __init__(self, id, first_name, last_name, email, phone, address, birthdate, gender, ssn, admin_role=True, password="1234"):
+        super().__init__(id, first_name, last_name, email, phone, address, birthdate, gender, ssn, admin_role, password)
 
 
 
