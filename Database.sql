@@ -1,0 +1,25 @@
+CREATE TABLE General_User (
+    ID INT PRIMARY KEY UNIQUE NOT NULL,
+    FName VARCHAR(30) NOT NULL,
+    LName VARCHAR(30) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE CHECK (POSITION('@' IN Email) > 0),
+    Phone VARCHAR(16) NOT NULL,
+    Address VARCHAR(200) NOT NULL,
+    Birthdate DATE NOT NULL,
+    Gender VARCHAR(6) NOT NULL CHECK (Gender = 'Male' OR Gender = 'Female'),
+    SSN VARCHAR(14) UNIQUE NOT NULL CHECK (LENGTH(SSN) = 14),
+    Admin_Role BOOLEAN DEFAULT FALSE,
+    Password VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE Item (
+    ID INT PRIMARY KEY UNIQUE NOT NULL,
+    Name VARCHAR(50) NOT NULL,
+    Type VARCHAR(30) NOT NULL CHECK (Type = 'Mechanical' OR Type = 'Electrical' OR Type = 'Raw Material'),
+    Description VARCHAR(200) NOT NULL,
+    Quantity INT NOT NULL,
+    Date DATE NOT NULL DEFAULT CURRENT_DATE,
+    Time TIME NOT NULL DEFAULT CURRENT_TIME,
+    Price DECIMAL(10, 2) NOT NULL,
+    User_ID INT REFERENCES General_User(ID) NOT NULL
+);
