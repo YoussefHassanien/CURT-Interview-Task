@@ -64,6 +64,16 @@ def insert_item(item):
     database_session.commit()
     return True
 
+def update_item(item):
+    cursor.execute("SELECT id FROM item WHERE id=%s", (item.id,))
+    database_item = cursor.fetchone()
+    if not database_item:
+        return False
+    cursor.execute("UPDATE item SET name=%s, type=%s, description=%s, quantity=%s, price=%s, user_id=%s WHERE id=%s",
+                   (item.name, item.type, item.description, item.quantity, item.price, item.user_id, item.id))
+    database_session.commit()
+    return True
+
 
 @app.route('/', methods=['GET'])
 def default():
@@ -143,14 +153,36 @@ def add_item():
     all_users = retrieve_all_users()
     employees_ids = [user.get('id') for user in all_users if not user.get('admin_role')]
     item_flag = insert_item(new_item)
-    for i in session['user']:
-        print(f"elements of session['user']: {i}")
     if item_flag:
         return render_template("admin.html", add_message="Item added successfully.", message_class="success-message",
                                 user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)
     return render_template("admin.html", add_message="Failed to add item. Please try again.", message_class="error-message", 
                            user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)    
 
+@app.route('/edit_item', methods=['POST'])
+def edit_item():
+    item_id = request.form.get('editItemId')
+    name = request.form.get('editItemName')
+    itype = request.form.get('editItemType')
+    description = request.form.get('editItemDescription')
+    quantity = request.form.get('editItemQuantity')
+    price = request.form.get('editItemPrice')
+    employee_id = request.form.get('editItemEmployeeId')
+    if itype == "Electrical":
+        edited_item = ElectricalPart(item_id, name, description, quantity, price, employee_id)
+    elif itype == "Mechanical":
+        edited_item = MechanicalPart(item_id, name, description, quantity, price, employee_id)
+    else:
+        edited_item = RawMaterial(item_id, name, description, quantity, price, employee_id)
+    item_flag = update_item(edited_item)
+    all_users = retrieve_all_users()
+    if item_flag:
+        employees_ids = [user.get('id') for user in all_users if not user.get('admin_role')]
+        return render_template("admin.html", edit_message="Item edited successfully.", message_class="success-message",
+                               user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)
+    employees_ids = [user.get('id') for user in all_users if not user.get('admin_role')]
+    return render_template("admin.html", edit_message="Failed to edit the item, Please try again", message_class="error-message",
+                           user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)
 
 if __name__ == '__main__':
     app.run()
