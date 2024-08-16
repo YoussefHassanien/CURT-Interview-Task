@@ -18,7 +18,6 @@ cursor = database_session.cursor(cursor_factory=psycopg2.extras.DictCursor)
 def retrieve_user(email, password):
     cursor.execute("SELECT * FROM general_user WHERE email=%s AND password=%s", (email, password))
     database_user = cursor.fetchone()
-    print(f"Database User: {database_user}")
     if database_user:
         return database_user
     return None
@@ -43,19 +42,21 @@ def default():
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
-    print(f"Email: {email}, Password: {password}")
     user = retrieve_user(email, password)
-    print(f"User: {user}")
     if user:
         items = retrieve_items(user.get('id'))
-        print(f"Items: {items}")
         session['user'] = user
         if user.get('admin_role'):
             return render_template('admin.html', user = user, items = items)
         return render_template('/home.html', user = user, items = items)
-    session['user'] = None
+    session.pop('user', None)
     error_message = "Invalid email or password. Please try again."
     return render_template("login.html", error=error_message)
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    session.pop('user', None)
+    return render_template("login.html")
 
 @app.route('/home', methods=['POST'])
 def home():
