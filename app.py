@@ -15,6 +15,20 @@ database_session = psycopg2.connect(
 database_session.autocommit = True
 cursor = database_session.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
+
+def new_id(table_name):
+    cursor.execute(f"SELECT id FROM {table_name}")
+    ids = cursor.fetchall()
+    ids = [row['id'] for row in ids]
+    ids.sort()
+    new_id = 1
+    for id in ids:
+        if id == new_id:
+            new_id += 1
+        else:
+            break
+    return new_id    
+
 def retrieve_user(email):
     cursor.execute("SELECT * FROM general_user WHERE email=%s", (email,))
     database_user = cursor.fetchone()
@@ -22,11 +36,12 @@ def retrieve_user(email):
         return database_user
     return None
 
-def retrieve_all_users():
+def retrieve_all_users_ids():
     cursor.execute("SELECT * FROM general_user")
     database_users = cursor.fetchall()
     if database_users:
-        return database_users
+        users_ids =  [user.get('id') for user in database_users if not user.get('admin_role')]
+        return users_ids
     return None
 
 def retrieve_items(id):
@@ -94,8 +109,7 @@ def login_user():
             items = retrieve_items(user.get('id'))
             session['user'] = user
             if user.get('admin_role'):
-                all_users = retrieve_all_users()
-                employees_ids = [user.get('id') for user in all_users if not user.get('admin_role')]
+                employees_ids = retrieve_all_users_ids()
                 return render_template('admin.html', user_dict = user, items = items, employees_ids = employees_ids)
             return render_template('/home.html', user = user, items = items)
     session.pop('user', None)
@@ -126,9 +140,8 @@ def register_user():
     if len(ssn) != 14:
         return render_template("register.html", message="Invalid SSN. Please try again.", message_class="error-message")
     gender = request.form.get('gender')
-    cursor.execute("SELECT id FROM general_user")
-    ids = cursor.fetchall()
-    new_user = User(len(ids) + 1, fname, lname, email, phone, address, birthdate, gender, ssn, password=password)                         
+    id = new_id('general_user')
+    new_user = User(id, fname, lname, email, phone, address, birthdate, gender, ssn, password=password)                         
     account_flag = insert_user(new_user)
     if account_flag:
         return render_template("register.html", message_class="success-message", message="Account created successfully.")
@@ -137,21 +150,19 @@ def register_user():
 @app.route('/add_item', methods=['POST'])
 def add_item():
     name = request.form.get('addItemName')
-    itype = request.form.get('addItemType')
+    type = request.form.get('addItemType')
     description = request.form.get('addItemDescription')
     quantity = request.form.get('addItemQuantity')
     price = request.form.get('addItemPrice')
     employee_id = request.form.get('addItemEmployeeId')
-    cursor.execute("SELECT id FROM item")
-    ids = cursor.fetchall()
-    if itype == "Electrical":
-        new_item = ElectricalPart(len(ids) + 1, name, description, quantity, price, employee_id)
-    elif itype == "Mechanical":
-        new_item = MechanicalPart(len(ids) + 1, name, description, quantity, price, employee_id)
+    id = new_id('item')
+    if type == "Electrical":
+        new_item = ElectricalPart(id, name, description, quantity, price, employee_id)
+    elif type == "Mechanical":
+        new_item = MechanicalPart(id, name, description, quantity, price, employee_id)
     else:
-        new_item = RawMaterial(len(ids) + 1, name, description, quantity, price, employee_id)
-    all_users = retrieve_all_users()
-    employees_ids = [user.get('id') for user in all_users if not user.get('admin_role')]
+        new_item = RawMaterial(id, name, description, quantity, price, employee_id)
+    employees_ids = retrieve_all_users_ids()
     item_flag = insert_item(new_item)
     if item_flag:
         return render_template("admin.html", add_message="Item added successfully.", message_class="success-message",
@@ -163,25 +174,39 @@ def add_item():
 def edit_item():
     item_id = request.form.get('editItemId')
     name = request.form.get('editItemName')
-    itype = request.form.get('editItemType')
+    type = request.form.get('editItemType')
     description = request.form.get('editItemDescription')
     quantity = request.form.get('editItemQuantity')
     price = request.form.get('editItemPrice')
     employee_id = request.form.get('editItemEmployeeId')
-    if itype == "Electrical":
+    if type == "Electrical":
         edited_item = ElectricalPart(item_id, name, description, quantity, price, employee_id)
-    elif itype == "Mechanical":
+    elif type == "Mechanical":
         edited_item = MechanicalPart(item_id, name, description, quantity, price, employee_id)
     else:
         edited_item = RawMaterial(item_id, name, description, quantity, price, employee_id)
     item_flag = update_item(edited_item)
-    all_users = retrieve_all_users()
+    employees_ids = retrieve_all_users_ids()
     if item_flag:
-        employees_ids = [user.get('id') for user in all_users if not user.get('admin_role')]
         return render_template("admin.html", edit_message="Item edited successfully.", message_class="success-message",
                                user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)
-    employees_ids = [user.get('id') for user in all_users if not user.get('admin_role')]
     return render_template("admin.html", edit_message="Failed to edit the item, Please try again", message_class="error-message",
+                           user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)
+
+@app.route('/delete_item', methods=['POST'])
+def delete_item():
+    cursor.execute("SELECT COUNT(*) FROM item")
+    total_items_before_delete = cursor.fetchone()[0]
+    item_id = request.form.get('deletedItemId')
+    cursor.execute("DELETE FROM item WHERE id=%s", (item_id,))
+    database_session.commit()
+    cursor.execute("SELECT COUNT(*) FROM item")
+    total_items_after_delete = cursor.fetchone()[0]
+    employees_ids = retrieve_all_users_ids()
+    if total_items_before_delete <= total_items_after_delete:
+        return render_template("admin.html", delete_message="Failed to delete item. Please try again.", message_class="error-message",
+                               user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)
+    return render_template("admin.html", delete_message="Item deleted successfully.", message_class="success-message",
                            user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)
 
 if __name__ == '__main__':
