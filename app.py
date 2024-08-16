@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session
 import psycopg2.extras
-from classes import User, Admin, Item, ElectricalPart, MechanicalPart, RawMaterial
+from classes import User, ElectricalPart, MechanicalPart, RawMaterial
+import hashlib
 
 app = Flask(__name__)
 app.secret_key = "Youssef.8.3"
@@ -14,6 +15,12 @@ database_session = psycopg2.connect(
 )
 database_session.autocommit = True
 cursor = database_session.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+
+def verify_password(password, hashed_password):
+    h = hashlib.sha256()
+    h.update(password.encode())
+    return h.hexdigest() == hashed_password
 
 
 def new_id(table_name):
@@ -105,7 +112,7 @@ def login_user():
     password = request.form.get('password')
     user = retrieve_user(email)
     if user:
-        if user.get('password') == password:
+        if verify_password(password, user.get('password')):
             items = retrieve_items(user.get('id'))
             session['user'] = user
             if user.get('admin_role'):
@@ -141,6 +148,9 @@ def register_user():
         return render_template("register.html", message="Invalid SSN. Please try again.", message_class="error-message")
     gender = request.form.get('gender')
     id = new_id('general_user')
+    h = hashlib.sha256()
+    h.update(password.encode())
+    password = h.hexdigest()
     new_user = User(id, fname, lname, email, phone, address, birthdate, gender, ssn, password=password)                         
     account_flag = insert_user(new_user)
     if account_flag:
