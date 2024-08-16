@@ -18,9 +18,15 @@ cursor = database_session.cursor(cursor_factory=psycopg2.extras.DictCursor)
 def retrieve_user(email):
     cursor.execute("SELECT * FROM general_user WHERE email=%s", (email,))
     database_user = cursor.fetchone()
-    print(f" Retrieve user function database user : {database_user}")
     if database_user:
         return database_user
+    return None
+
+def retrieve_all_users():
+    cursor.execute("SELECT * FROM general_user")
+    database_users = cursor.fetchall()
+    if database_users:
+        return database_users
     return None
 
 def retrieve_items(id):
@@ -37,16 +43,24 @@ def retrieve_items(id):
 
 def insert_user(user):
     database_user = retrieve_user(user.email)
-    print(f" Insert user function database user : {database_user}")
     if database_user:
         return False
     cursor.execute("SELECT ssn FROM general_user WHERE ssn=%s", (user.ssn,))
     ssn = cursor.fetchone()
-    print(f" Insert user function database ssn : {ssn}")
     if ssn:
         return False
     cursor.execute("INSERT INTO general_user (id, fname, lname, email, password, birthdate, phone, gender, address, ssn) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                     (user.id, user.first_name, user.last_name, user.email, user.password, user.birthdate, user.phone, user.gender, user.address, user.ssn))
+    database_session.commit()
+    return True
+
+def insert_item(item):
+    cursor.execute("SELECT id FROM item WHERE id=%s", (item.id,))
+    database_item = cursor.fetchone()
+    if database_item:
+        return False
+    cursor.execute("INSERT INTO item (id, name, type, description, quantity, price, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    (item.id, item.name, item.type, item.description, item.quantity, item.price, item.user_id))
     database_session.commit()
     return True
 
@@ -70,7 +84,9 @@ def login_user():
             items = retrieve_items(user.get('id'))
             session['user'] = user
             if user.get('admin_role'):
-                return render_template('admin.html', user = user, items = items)
+                all_users = retrieve_all_users()
+                employees_ids = [user.get('id') for user in all_users if not user.get('admin_role')]
+                return render_template('admin.html', user_dict = user, items = items, employees_ids = employees_ids)
             return render_template('/home.html', user = user, items = items)
     session.pop('user', None)
     error_message = "Invalid email or password. Please try again."
@@ -107,6 +123,33 @@ def register_user():
     if account_flag:
         return render_template("register.html", message_class="success-message", message="Account created successfully.")
     return render_template("register.html", message="Failed to create account. Please try again.", message_class="error-message")
+
+@app.route('/add_item', methods=['POST'])
+def add_item():
+    name = request.form.get('addItemName')
+    itype = request.form.get('addItemType')
+    description = request.form.get('addItemDescription')
+    quantity = request.form.get('addItemQuantity')
+    price = request.form.get('addItemPrice')
+    employee_id = request.form.get('addItemEmployeeId')
+    cursor.execute("SELECT id FROM item")
+    ids = cursor.fetchall()
+    if itype == "Electrical":
+        new_item = ElectricalPart(len(ids) + 1, name, description, quantity, price, employee_id)
+    elif itype == "Mechanical":
+        new_item = MechanicalPart(len(ids) + 1, name, description, quantity, price, employee_id)
+    else:
+        new_item = RawMaterial(len(ids) + 1, name, description, quantity, price, employee_id)
+    all_users = retrieve_all_users()
+    employees_ids = [user.get('id') for user in all_users if not user.get('admin_role')]
+    item_flag = insert_item(new_item)
+    for i in session['user']:
+        print(f"elements of session['user']: {i}")
+    if item_flag:
+        return render_template("admin.html", add_message="Item added successfully.", message_class="success-message",
+                                user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)
+    return render_template("admin.html", add_message="Failed to add item. Please try again.", message_class="error-message", 
+                           user_list = session['user'], items = retrieve_items(session['user'][0]), employees_ids = employees_ids)    
 
 
 if __name__ == '__main__':

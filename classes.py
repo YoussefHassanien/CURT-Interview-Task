@@ -34,7 +34,7 @@ class Item(ABC):
 
 class ElectricalPart(Item):
     def __init__(self, id, name, description, quantity, price, user_id):
-        super().__init__(id, name, description, quantity, price, user_id)
+        super().__init__(id, name, quantity, price, user_id)
         self.description = description
         self.type = "Electrical"
 
@@ -46,7 +46,7 @@ class ElectricalPart(Item):
 
 class MechanicalPart(Item):
     def __init__(self, id, name, description, quantity, price, user_id):
-        super().__init__(id, name, description, quantity, price, user_id)
+        super().__init__(id, name, quantity, price, user_id)
         self.description = description
         self.type = "Mechanical"
 
@@ -58,7 +58,7 @@ class MechanicalPart(Item):
 
 class RawMaterial(Item):
     def __init__(self, id, name, description, quantity, price, user_id):
-        super().__init__(id, name, description, quantity, price, user_id)
+        super().__init__(id, name, quantity, price, user_id)
         self.description = description
         self.type = "Raw Material"
 
