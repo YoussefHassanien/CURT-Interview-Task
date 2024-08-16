@@ -39,6 +39,18 @@ body {
     margin-left: 130px;
 }
 
+.nav-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.nav-center .logo {
+    height: 60px;
+    padding: 10px;
+}
+
 .nav-right {
     display: flex;
     align-items: center;
@@ -55,6 +67,11 @@ body {
 .nav-right a:hover {
     background-color: #ddd;
     color: black;
+}
+
+#error-message {
+    color: red;
+    margin-top: 10px;
 }
 
 .login-container, .register-container, .add-item-container, .edit-item-container, .delete-item-container {

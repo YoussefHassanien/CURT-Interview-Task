@@ -9,7 +9,7 @@
 <body>
     <div class="nav-bar">
         <div class="nav-left">
-            <img src="../Images/stock-keeping-unit.png" alt="Logo" class="logo">
+            <img src="../static/Images/stock-keeping-unit.png" alt="Logo" class="logo">
             <span>Inventory Management</span>
         </div>
         <div class="nav-right">
@@ -19,7 +19,7 @@
     </div>
     <div class="login-container">
         <h2>Login</h2>
-        <form id="loginForm">
+        <form id="loginForm" method="post" action="/login">
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="text" id="email" name="email" required>
@@ -30,11 +30,12 @@
             </div>
             <button type="submit">Login</button>
         </form>
-        <div id="error-message"></div>
+        {% if error %}
+        <div id="error-message" class="error">{{ error }}</div>
+        {% endif %}
         <div class="register-prompt">
             <p>Don't have an account? <a href="../templates/register.html">Register now</a></p>
         </div>
     </div>
-    <script src="../static/Scripts/script.js"></script>
 </body>
 </html>

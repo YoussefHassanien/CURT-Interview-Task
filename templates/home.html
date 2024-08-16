@@ -9,8 +9,12 @@
 <body>
     <div class="nav-bar">
         <div class="nav-left">
-            <img src="../Images/stock-keeping-unit.png" alt="Logo" class="logo">
+            <img src="../static/Images/stock-keeping-unit.png" alt="Logo" class="logo">
             <span>Inventory Management</span>
+        </div>
+        <div class="nav-center">
+            <img src="../static/Images/waving.png" alt="Hi" class="logo">
+            <span>Hi {{ user['fname'] + " " + user['lname'] }}</span>
         </div>
         <div class="nav-right">
             <a href="../templates/login.html">Logout</a>
@@ -21,37 +25,36 @@
         <div class="search-container-item">
             <input type="text" id="searchBarItem" placeholder="Search for items..">
             <button onclick="searchTable()" class="search-button">
-                <img src="../Images/glass.png" alt="Search">
+                <img src="../static/Images/glass.png" alt="Search">
             </button>
         </div>
         <table class="inventory-table-items" id="inventoryTableItems">
             <thead>
                 <tr>
                     <th>Item ID</th>
+                    <th>Item Name</th>
                     <th>Item Type</th>
                     <th>Describtion</th>
                     <th>Quantity</th>
                     <th>Addition Date</th>
+                    <th>Addition Time</th>
                     <th>Price</th>
                 </tr>
             </thead>
             <tbody>
+                {% for item in items %}
                 <tr>
-                    <td>1</td>
-                    <td>Type 1</td>
-                    <td>Describtion 1</td>
-                    <td>100</td>
-                    <td>2020-01-01</td>
-                    <td>10.00 $</td>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                    <td>{{ item[6] }}</td>
+                    <td>{{ item[7]|string + " $" }}</td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Type 2</td>
-                    <td>Describtion 2</td>
-                    <td>200</td>
-                    <td>2020-02-02</td>
-                    <td>20.00 $</td>
-                </tr>
+                {% endfor %}
+
             </tbody>
         </table>
     </div>
